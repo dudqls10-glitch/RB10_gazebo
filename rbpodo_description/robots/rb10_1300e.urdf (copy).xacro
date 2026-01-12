@@ -4,8 +4,6 @@
   <!-- ================= Includes ================= -->
   <xacro:include filename="$(find rbpodo_description)/robots/rb_6dof.xacro" />
   <xacro:include filename="$(find rbpodo_description)/robots/rb_6dof.ros2_control.xacro" />
-  <xacro:include filename="$(find rbpodo_description)/robots/sensors/tof_gpu_lidar.xacro"/>
-
 
   <!-- ================= Arguments ================= -->
   <xacro:arg name="prefix" default="" />
@@ -37,86 +35,6 @@
       tcp_name="tcp"
       tcp_xyz="0 -0.1153 0"
       tcp_rpy="0 0 0" />
-      <!-- link2: RIGHT(+Y->-Y는 로봇 정의에 따라 다름, 여기선 방향만 예시) -->
-<!-- link2 ToFs -->
-<!-- =============================== -->
-<!-- Link-specific ToF base offsets -->
-<!-- =============================== -->
-
-<!-- link2 -->
-<xacro:property name="link2_tof_x" value="0.0"/>
-<xacro:property name="link2_tof_y" value="-0.1875"/>
-<xacro:property name="link2_tof_z" value="0.30635"/>
-
-<!-- link3 -->
-<xacro:property name="link3_tof_x" value="0.0"/>
-<xacro:property name="link3_tof_y" value="0.1484"/>
-<xacro:property name="link3_tof_z" value="0.285075"/>
-
-
-<!-- ================= link2 ToF ================= -->
-
-<xacro:tof_gpu_lidar
-  parent="link2"
-  name="link2_tof_north"
-  xyz="${link2_tof_x+0.075} ${link2_tof_y} ${link2_tof_z}"
-  rpy="0 0 0"
-  topic="/link2/tof_north"/>
-
-<xacro:tof_gpu_lidar
-  parent="link2"
-  name="link2_tof_south"
-  xyz="${link2_tof_x-0.075} ${link2_tof_y} ${link2_tof_z}"
-  rpy="0 0 3.14159"
-  topic="/link2/tof_south"/>
-
-<xacro:tof_gpu_lidar
-  parent="link2"
-  name="link2_tof_west"
-  xyz="${link2_tof_x} ${link2_tof_y+0.075} ${link2_tof_z}"
-  rpy="0 0 1.5708"
-  topic="/link2/tof_west"/>
-
-<xacro:tof_gpu_lidar
-  parent="link2"
-  name="link2_tof_east"
-  xyz="${link2_tof_x} ${link2_tof_y-0.075} ${link2_tof_z}"
-  rpy="0 0 -1.5708"
-  topic="/link2/tof_east"/>
-
-
-
-<!-- ================= link3 ToF ================= -->
-
-<xacro:tof_gpu_lidar
-  parent="link3"
-  name="link3_tof_north"
-  xyz="${link3_tof_x+0.06} ${link3_tof_y} ${link3_tof_z}"
-  rpy="0 0 0"
-  topic="/link3/tof_north"/>
-
-<xacro:tof_gpu_lidar
-  parent="link3"
-  name="link3_tof_south"
-  xyz="${link3_tof_x-0.06} ${link3_tof_y} ${link3_tof_z}"
-  rpy="0 0 3.14159"
-  topic="/link3/tof_south"/>
-
-<xacro:tof_gpu_lidar
-  parent="link3"
-  name="link3_tof_west"
-  xyz="${link3_tof_x} ${link3_tof_y+0.06} ${link3_tof_z}"
-  rpy="0 0 1.5708"
-  topic="/link3/tof_west"/>
-
-<xacro:tof_gpu_lidar
-  parent="link3"
-  name="link3_tof_east"
-  xyz="${link3_tof_x} ${link3_tof_y-0.06} ${link3_tof_z}"
-  rpy="0 0 -1.5708"
-  topic="/link3/tof_east"/>
-
-
 
   <!-- ================= ros2_control ================= -->
   <xacro:rb_6dof_ros2_control 

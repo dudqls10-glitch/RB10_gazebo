@@ -1,0 +1,26 @@
+<sdf version="1.9">
+  <world name="empty">
+
+    <!-- Physics -->
+    <plugin
+      filename="ignition-gazebo-physics-system"
+      name="ignition::gazebo::systems::Physics"/>
+
+    <!-- User commands -->
+    <plugin
+      filename="ignition-gazebo-user-commands-system"
+      name="ignition::gazebo::systems::UserCommands"/>
+
+    <!-- Scene broadcaster -->
+    <plugin
+      filename="ignition-gazebo-scene-broadcaster-system"
+      name="ignition::gazebo::systems::SceneBroadcaster"/>
+
+    <!-- 🔴 이게 핵심 -->
+    <plugin
+      filename="ignition-gazebo-sensors-system"
+      name="ignition::gazebo::systems::Sensors"/>
+
+  </world>
+</sdf>
+

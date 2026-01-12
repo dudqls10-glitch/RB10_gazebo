@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!--
+  ToF-like GPU LiDAR (3D cone)
+  fov_total : total FoV in radians (150 deg = 2.61799388)
+  h_samples : horizontal ray count
+  v_samples : vertical ray count
+-->
+<xacro:macro name="tof_gpu_lidar" params="
+  parent
+  name
+  xyz
+  rpy
+  topic
+  update_rate:=30
+  range_min:=0.01
+  range_max:=0.30
+  fov_total:=2.61799388
+  h_samples:=21
+  v_samples:=21
+  viz:=true
+  viz_thick:=0.002
+">
+
+
+    <!-- ===================== -->
+    <!-- Sensor link           -->
+    <!-- ===================== -->
+    <link name="${name}_link">
+      <inertial>
+        <mass value="0.01"/>
+        <origin xyz="0 0 0"/>
+        <inertia
+          ixx="1e-6" ixy="0" ixz="0"
+          iyy="1e-6" iyz="0"
+          izz="1e-6"/>
+      </inertial>
+
+      <!-- Sensor body -->
+      <visual>
+        <origin xyz="0 0 0"/>
+        <geometry>
+          <box size="0.01 0.01 0.01"/>
+        </geometry>
+        <material name="${name}_body_mat">
+          <color rgba="0.3 0.3 0.3 1.0"/>
+        </material>
+      </visual>
+
+      <collision>
+        <origin xyz="0 0 0"/>
+        <geometry>
+          <box size="0.01 0.01 0.01"/>
+        </geometry>
+      </collision>
+
+      <!-- ===================== -->
+      <!-- FoV visual (boundary) -->
+      <!-- Note: URDF primitives can't render a true cone surface.
+           This shows only the horizontal FoV boundaries. -->
+      <!-- ===================== -->
+      <xacro:if value="${viz}">
+        <!-- Left horizontal FoV boundary -->
+        <visual name="${name}_fov_left">
+          <origin
+            xyz="${range_max * 0.5} 0 0"
+            rpy="0 0 ${ (fov_total * 0.5) }"/>
+          <geometry>
+            <box size="${range_max} ${viz_thick} ${viz_thick}"/>
+          </geometry>
+          <material name="${name}_fov_left_mat">
+            <color rgba="0 1 0 1"/>
+          </material>
+        </visual>
+
+        <!-- Right horizontal FoV boundary -->
+        <visual name="${name}_fov_right">
+          <origin
+            xyz="${range_max * 0.5} 0 0"
+            rpy="0 0 ${ -(fov_total * 0.5) }"/>
+          <geometry>
+            <box size="${range_max} ${viz_thick} ${viz_thick}"/>
+          </geometry>
+          <material name="${name}_fov_right_mat">
+            <color rgba="0 1 0 1"/>
+          </material>
+        </visual>
+      </xacro:if>
+
+    </link>
+
+    <!-- ===================== -->
+    <!-- Fixed joint           -->
+    <!-- ===================== -->
+    <joint name="${name}_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="${name}_link"/>
+      <origin xyz="${xyz}" rpy="${rpy}"/>
+    </joint>
+
+    <!-- ===================== -->
+    <!-- Gazebo sensor         -->
+    <!-- ===================== -->
+    <gazebo reference="${name}_link">
+      <sensor name="${name}_sensor" type="gpu_lidar">
+        <pose>0 0 0 0 0 0</pose>
+        <update_rate>${update_rate}</update_rate>
+
+        <ray>
+          <scan>
+            <!-- Horizontal FoV -->
+            <horizontal>
+              <samples>${h_samples}</samples>
+              <resolution>1</resolution>
+              <min_angle>${ -(fov_total * 0.5) }</min_angle>
+              <max_angle>${  (fov_total * 0.5) }</max_angle>
+            </horizontal>
+
+            <!-- Vertical FoV (this is what makes it 3D cone-like) -->
+            <vertical>
+              <samples>${v_samples}</samples>
+              <resolution>1</resolution>
+              <min_angle>${ -(fov_total * 0.5) }</min_angle>
+              <max_angle>${  (fov_total * 0.5) }</max_angle>
+            </vertical>
+          </scan>
+
+          <range>
+            <min>${range_min}</min>
+            <max>${range_max}</max>
+          </range>
+        </ray>
+
+        <topic>${topic}</topic>
+      </sensor>
+    </gazebo>
+
+  </xacro:macro>
+
+</robot>
+
