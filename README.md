@@ -1,5 +1,15 @@
 # rbpodo_ros2
 
+## Song
+```bash
+
+cd ~/rb10_gazebo_ws && colcon build --symlink-install && source install/setup.bash
+export IGN_GAZEBO_SYSTEM_PLUGIN_PATH=/opt/ros/humble/lib && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ros/humble/lib:/opt/ros/humble/lib/controller_manager && ros2 launch rbpodo_description rb10_gazebo.launch.py
+ros2 launch rbpodo_moveit_config moveit.launch.py
+
+```
+
+
 > :warning: **IMPORTANT WARNING**: This software is under active development. DO NOT USE in production to avoid potential instability.
 
 
